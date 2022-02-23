@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增数据</title>
+    <link href="/static/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/htmleaf2.css" type="text/css">
+    <script src="/static/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .form-bg {
+            background: #c4e3f3;
+        }
+
+        .form-horizontal {
+            background: #fff;
+            padding-bottom: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .form-horizontal .heading {
+            display: block;
+            font-size: 25px;
+            font-weight: 700;
+            padding: 35px 0;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 30px;
+        }
+
+        .form-horizontal .form-group {
+            padding: 0 20px;
+            margin: 0 0 15px 0;
+            position: relative;
+            color: black;
+        }
+
+        .form-horizontal .form-control {
+            background: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            box-shadow: none;
+            padding: 0 20px 0 45px;
+            height: 40px;
+            transition: all 0.3s ease 0s;
+        }
+
+        .form-horizontal .form-control:focus {
+            background: #e0e0e0;
+            box-shadow: none;
+            outline: 0 none;
+        }
+
+        .form-horizontal .form-group i {
+            position: absolute;
+            top: 12px;
+            left: 60px;
+            font-size: 17px;
+            color: #c8c8c8;
+            transition: all 0.5s ease 0s;
+        }
+
+        .form-horizontal .form-control:focus + i {
+            color: #00b4ef;
+        }
+
+        .form-horizontal .fa-question-circle {
+            display: inline-block;
+            position: absolute;
+            top: 12px;
+            right: 60px;
+            font-size: 20px;
+            color: #808080;
+            transition: all 0.5s ease 0s;
+        }
+
+        .form-horizontal .fa-question-circle:hover {
+            color: #000;
+        }
+
+        .form-horizontal .main-checkbox {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #11a3fc;
+            border-radius: 50%;
+            position: relative;
+            margin: 5px 0 0 5px;
+            border: 1px solid #11a3fc;
+        }
+
+        .form-horizontal .main-checkbox label {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .form-horizontal .main-checkbox label:after {
+            content: "";
+            width: 10px;
+            height: 5px;
+            position: absolute;
+            top: 5px;
+            left: 4px;
+            border: 3px solid #fff;
+            border-top: none;
+            border-right: none;
+            background: transparent;
+            opacity: 0;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .form-horizontal .main-checkbox input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        .form-horizontal .main-checkbox input[type=checkbox]:checked + label:after {
+            opacity: 1;
+        }
+
+        .form-horizontal .text {
+            float: left;
+            margin-left: 7px;
+            line-height: 20px;
+            padding-top: 5px;
+            text-transform: capitalize;
+        }
+
+        .form-horizontal .btn {
+            float: right;
+            font-size: 14px;
+            color: #fff;
+            background: #00b4ef;
+            border-radius: 30px;
+            padding: 10px 25px;
+            border: none;
+            text-transform: capitalize;
+            transition: all 0.5s ease 0s;
+        }
+
+        .form-horizontal .form-group > p {
+            float: left;
+            margin-left: 17%;
+        }
+
+        .form-horizontal .form-group .btn{
+            margin-left: 50px;
+        }
+
+        @media only screen and (max-width: 479px) {
+            .form-horizontal .form-group {
+                padding: 0 25px;
+            }
+
+            .form-horizontal .form-group i {
+                left: 45px;
+            }
+
+            .form-horizontal .btn {
+                padding: 10px 20px;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="htmleaf-container">
+    <header class="htmleaf-header">
+        <h1>学生信息修改 <span>Student Information Modifying</span></h1>
+        <div class="htmleaf-links">
+            <a class="htmleaf-icon icon-htmleaf-home-outline" href="/page/1" title="首页"><span>首页</span></a>
+            <a class="htmleaf-icon icon-htmleaf-arrow-forward-outline" href="/login" title="退出"><span> 退出</span></a>
+        </div>
+    </header>
+    <div class="demo form-bg" style="padding: 20px 0;">
+        <div class="container">
+            <div class="col-sm-6 col-sm-offset-4">
+                <form id="form1" name="form1" class="form-horizontal" action="/page/update" method="post">
+                    <span class="heading">请输入要修改记录的相关信息</span>
+                    <div class="form-group">
+                        <p>
+                            <label>学号：{{data[0]}}</label>
+                            <input type="hidden" name="stu_id" value='{{data[0]}}'/>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <label>姓名： </label>
+                <input type="text" name="stu_name" value='{{data[1]}}' id="stu_name"/>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <label>性别：</label>
+                {% if data[2]=="男" %}
+
+                <input name="stu_sex" type="radio" value="男" checked="checked"/>
+                男
+
+                <input type="radio" name="stu_sex" value="女"/>
+                女
+                {%else%}
+
+                <input name="stu_sex" type="radio" value="男"/>
+                男
+
+                <input type="radio" name="stu_sex" value="女" checked="checked"/>
+                女
+                {%endif%}
+                <br/>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <label>年龄： </label>
+                <input type="text" name="stu_age" value='{{data[3]}}' id="stu_age"/>
+
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <label>籍贯：</label>
+                <input type="text" name="stu_origin" value='{{data[4]}}' id="stu_origin"/>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <label>专业：</label>
+                   <select name="stu_profession">
+                {% for pr in pro %}
+
+                 <option value='{{pr[0]}}' {{"selected" if pr[0]==data[5]}}>{{pr[1]}}</option>
+                {% endfor %}
+
+            </select>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <label id="hint"></label>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <input class="btn btn-primary" type="submit" name="button" value="提交"
+                                   onclick="return validation()"/>
+                            <input class="btn btn-primary" type="reset" name="button2" value="重置"/>
+                            <br/>
+                        </p>
+                    </div>
+                </form>
+                <p>&nbsp; </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function validation(){
+        let stuAgeTest=/^[0-9]{1,3}$/
+        let stuName = document.getElementById("stu_name").value;
+        var stuAge = document.getElementById("stu_age").value;
+        let stuOrigin = document.getElementById("stu_origin").value;
+        if(stuName.length === 0)
+        {
+            document.getElementById("hint").innerText = "学生姓名不能为空！";
+            return false;
+        }
+        if(!stuAgeTest.test(stuAge))
+        {
+            if(stuAge.length === 0){
+                document.getElementById("hint").innerText = "学生年龄不能为空！";
+                return false;
+            }
+            else
+            {
+                document.getElementById("hint").innerText = "学生年龄范围为1-100！";
+                return false;
+            }
+
+        }
+        else
+        {
+            if(stuAge < 1 || stuAge > 100)
+            {
+                document.getElementById("hint").innerText = "学生年龄范围为1-100！";
+                return false;
+            }
+        }
+        if(stuOrigin.length === 0)
+        {
+            document.getElementById("hint").innerText = "学生籍贯不能为空！";
+            return false;
+        }
+        document.getElementById("hint").innerText = "";
+        return true;
+    }
+</script>
+</body>
+</html>

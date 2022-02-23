@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生信息管理</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/htmleaf.css" type="text/css">
+    <link rel="stylesheet" href="../static/css/paginated.css" type="text/css">
+    <script type="text/javascript" src="../static/js/paginated/paginated_jump.js"></script>
+    <script type="text/javascript" src="../static/js/paginated/paginated_check_fst.js"></script>
+    <script type="text/javascript" src="../static/js/paginated/paginated_check_last.js"></script>
+    <style type="text/css">
+
+        body {
+            background: white;
+        }
+
+        .tops {
+            margin-bottom: 25px;
+            margin-left: 5px;
+        }
+
+        .tops > a {
+            color: #000000
+        }
+
+        .tops > a:hover {
+            text-decoration: none
+        }
+
+        #dataTable {
+            border: none;
+        }
+
+        #dataShowTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #dataShowTable td, #dataShowTable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #dataShowTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #dataShowTable tr:hover {
+            background-color: #ddd;
+        }
+
+        #dataShowTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #3F3F3F;
+            color: white;
+        }
+
+        #barcon {
+            overflow: hidden;
+        }
+
+        #barcon2 {
+            float: right
+        }
+
+        #barcon2 > ul > li {
+            padding: 5px;
+        }
+
+        .barcon2 a:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body onload="infoConfirm()">
+<div class="htmleaf-container">
+    <header class="htmleaf-header">
+        <h1>学生信息管理 <span>Student Info Management</span></h1>
+        <div class="htmleaf-links">
+            <a class="htmleaf-icon icon-htmleaf-home-outline" href="/page/1" title="首页"><span>首页</span></a>
+            <a class="htmleaf-icon icon-htmleaf-arrow-forward-outline" href="/login" title="退出"><span> 退出</span></a>
+        </div>
+    </header>
+    <div style="margin:auto; width:80%;padding:2em 0;">
+        <div id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="80%">
+            <form action="/delete_students">
+                <div class="top_buttons">
+                    <button class="tops" id="search_btn"><a href="/search">查询</a></button>
+                    <button class="tops" id="add_btn"><a href="/add">新增</a></button>
+                    <input type="submit" value="批量删除" class="tops" onclick="return confirm('是否确认删除所有选中的学生信息？');">
+                    <label id="hint"  style="display:none">{{ get_flashed_messages()[0] }}</label>
+                </div>
+                <table id="dataShowTable" border="1" style="width:100%;text-align: center">
+                    <tr>
+                        <th>选中</th>
+                        {% for a in fields %}
+                        <th>{{a}}</th>
+                        {% endfor %}
+                        <th>修改</th>
+                        <th>删除</th>
+                    </tr>
+                    {%for item in datas%}
+                    <tr>
+                        <td><input type="checkbox" name="array" value="{{item[0]}}"></td>
+                        {%for a in item%}
+                        <td>{{a}}</td>
+                        {% endfor %}
+                        <td><a href="update?id={{item[0]}}">修改</a></td>
+                        <td><a href="/del/{{item[0]}}" onclick="return deleteConfirm()">删除</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </form>
+            <div id="barcon" class="barcon" style="margin:auto; width:100%;padding:2em 0;">
+                <div id="barcon1" class="barcon1">
+                </div>
+                <div id="barcon2" class="barcon2">
+                    <ul>
+                        <li><a href="/page/1{{schfilter}}" id="firstpage">首页</a></li>
+                        <li><a href="/page/{{pageid-1}}{{schfilter}}" id="prepage" onclick="check_first()">上一页</a></li>
+                        <li><a href="/page/{{pageid+1}}{{schfilter}}" id="nextpage" onclick="check_last()">下一页</a></li>
+                        <li><a href="/page/{{total_page}}{{schfilter}}" id="lastpage">尾页</a></li>
+                        <li>
+                            <select name="" id="jumpWhere" onchange="setAddress_jumpPage()">
+                                {% for i in range(1,total_page+1) %}
+                                {% if i==pageid %}
+                                <option value="{{i}}" class="page{{i}}" selected="selected">{{i}}</option>
+                                {% else%}
+                                <option value="{{i}}" class="page{{i}}">{{i}}</option>
+                                {% endif%}
+                                {% endfor%}
+                            </select>
+                        </li>
+                        <li><a href="/page/{{pageid}}{{schfilter}}" id="jumpPage">跳转</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    function infoConfirm(){
+         if(document.getElementById("hint").innerText == "修改成功！")
+        {
+            alert("修改成功！");
+            document.getElementById("hint").innerText ="";
+        }
+        else if(document.getElementById("hint").innerText == "添加成功！")
+         {
+            alert("添加成功！");
+            document.getElementById("hint").innerText ="";
+        }
+          else if(document.getElementById("hint").innerText == "批量删除成功！")
+         {
+            alert("批量删除成功！");
+            document.getElementById("hint").innerText ="";
+        }
+          else if(document.getElementById("hint").innerText == "删除成功！")
+         {
+            alert("删除成功！");
+            document.getElementById("hint").innerText ="";
+        }
+        else if(document.getElementById("hint").innerText == "请通过合法途径访问页面！")
+         {
+            alert("请通过合法途径访问页面！");
+            document.getElementById("hint").innerText ="";
+        }
+         else if(document.getElementById("hint").innerText == "未选中任何学生信息！")
+         {
+            alert("未选中任何学生信息！");
+            document.getElementById("hint").innerText ="";
+        }
+    }
+    setAddress_jumpPage = function()
+    {
+        var cur_page = document.getElementById("jumpWhere").value;
+        var a_jump =document.getElementById("jumpPage");
+        a_jump.href = "/page/".concat(cur_page).concat("{{schfilter}}");
+    }
+    function deleteConfirm(){
+        return confirm("是否确认删除？");
+    }
+</script>
+</body>
+</html>
